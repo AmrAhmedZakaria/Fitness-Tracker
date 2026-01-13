@@ -17,7 +17,7 @@ single_gyo_data = pd.read_csv(
 # List all data in data/raw/MetaMotion
 # --------------------------------------------------------------
 
-files = glob('../../data/raw/MetaMotion/*.csv')
+files = glob("../../data/raw/MetaMotion/*.csv")
 len(files)
 
 # --------------------------------------------------------------
@@ -28,15 +28,15 @@ data_path = "../../data/raw/MetaMotion/"
 
 f = files[0]
 
-participant =f.split("-")[0].replace(data_path , '')
+participant = f.split("-")[0].replace(data_path, "")
 lable = f.split("-")[1]
-category = f.split("-")[2].rstrip('123').rstrip('_MetaWear_2019')
+category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
 df = pd.read_csv(f)
 
-df['participant'] = participant
-df['lable'] = lable
-df['category'] = category
+df["participant"] = participant
+df["lable"] = lable
+df["category"] = category
 
 # --------------------------------------------------------------
 # Read all files
@@ -48,46 +48,46 @@ acc_set = 1
 gyo_set = 1
 
 for f in files:
-
-    participant =f.split("-")[0].replace(data_path , '')
+    participant = f.split("-")[0].replace(data_path, "")
     lable = f.split("-")[1]
-    category = f.split("-")[2].rstrip('123').rstrip('_MetaWear_2019')
+    category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
     df = pd.read_csv(f)
 
-    df['participant'] = participant
-    df['lable'] = lable
-    df['category'] = category
+    df["participant"] = participant
+    df["lable"] = lable
+    df["category"] = category
 
     if "Accelerometer" in f:
-        df['set'] = acc_set
+        df["set"] = acc_set
         acc_set += 1
-        acc_df = pd.concat([acc_df , df])
-    
+        acc_df = pd.concat([acc_df, df])
+
     if "Gyroscope" in f:
-        df['set'] = gyo_set
+        df["set"] = gyo_set
         gyo_set += 1
-        gyo_df = pd.concat([gyo_df , df])
+        gyo_df = pd.concat([gyo_df, df])
 
 # --------------------------------------------------------------
 # Working with datetimes
 # --------------------------------------------------------------
- pd.to_datetime(df['epoch (ms)'] , unit='ms')
+pd.to_datetime(df["epoch (ms)"], unit="ms")
 
-acc_df.index =  pd.to_datetime(acc_df['epoch (ms)'] , unit='ms')
-gyo_df.index =  pd.to_datetime(gyo_df['epoch (ms)'] , unit='ms')
+acc_df.index = pd.to_datetime(acc_df["epoch (ms)"], unit="ms")
+gyo_df.index = pd.to_datetime(gyo_df["epoch (ms)"], unit="ms")
 
-del acc_df['epoch (ms)']
-del acc_df['time (01:00)']
-del acc_df['elapsed (s)']
+del acc_df["epoch (ms)"]
+del acc_df["time (01:00)"]
+del acc_df["elapsed (s)"]
 
-del gyo_df['epoch (ms)']
-del gyo_df['time (01:00)']
-del gyo_df['elapsed (s)']
+del gyo_df["epoch (ms)"]
+del gyo_df["time (01:00)"]
+del gyo_df["elapsed (s)"]
 
 # --------------------------------------------------------------
 # Turn into function
 # --------------------------------------------------------------
+
 
 def read_data_from_files(files):
     acc_df = pd.DataFrame()
@@ -97,53 +97,61 @@ def read_data_from_files(files):
     gyo_set = 1
 
     for f in files:
-
-        participant =f.split("-")[0].replace(data_path , '')
+        participant = f.split("-")[0].replace(data_path, "")
         lable = f.split("-")[1]
-        category = f.split("-")[2].rstrip('123').rstrip('_MetaWear_2019')
+        category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
         df = pd.read_csv(f)
 
-        df['participant'] = participant
-        df['lable'] = lable
-        df['category'] = category
+        df["participant"] = participant
+        df["lable"] = lable
+        df["category"] = category
 
         if "Accelerometer" in f:
-            df['set'] = acc_set
+            df["set"] = acc_set
             acc_set += 1
-            acc_df = pd.concat([acc_df , df])
-        
+            acc_df = pd.concat([acc_df, df])
+
         if "Gyroscope" in f:
-            df['set'] = gyo_set
+            df["set"] = gyo_set
             gyo_set += 1
-            gyo_df = pd.concat([gyo_df , df])
+            gyo_df = pd.concat([gyo_df, df])
 
-    pd.to_datetime(df['epoch (ms)'] , unit='ms')
+    pd.to_datetime(df["epoch (ms)"], unit="ms")
 
-    acc_df.index =  pd.to_datetime(acc_df['epoch (ms)'] , unit='ms')
-    gyo_df.index =  pd.to_datetime(gyo_df['epoch (ms)'] , unit='ms')
+    acc_df.index = pd.to_datetime(acc_df["epoch (ms)"], unit="ms")
+    gyo_df.index = pd.to_datetime(gyo_df["epoch (ms)"], unit="ms")
 
-    del acc_df['epoch (ms)']
-    del acc_df['time (01:00)']
-    del acc_df['elapsed (s)']
+    del acc_df["epoch (ms)"]
+    del acc_df["time (01:00)"]
+    del acc_df["elapsed (s)"]
 
-    del gyo_df['epoch (ms)']
-    del gyo_df['time (01:00)']
-    del gyo_df['elapsed (s)']
+    del gyo_df["epoch (ms)"]
+    del gyo_df["time (01:00)"]
+    del gyo_df["elapsed (s)"]
 
-    return acc_df , gyo_df
+    return acc_df, gyo_df
 
-acc_df , gyo_df = read_data_from_files(files)
+
+acc_df, gyo_df = read_data_from_files(files)
 
 # --------------------------------------------------------------
 # Merging datasets
 # --------------------------------------------------------------
-data_merged = pd.concat([acc_df.iloc[:,:3] , gyo_df], axis = 1)
+data_merged = pd.concat([acc_df.iloc[:, :3], gyo_df], axis=1)
 
-data_merged.columns = ['acc_x' , 'acc_y' , 'acc_z',
-                       'gyo_x' , 'gyo_y' , 'gyo_z',
-                       'label' , 'category' , 'participant',
-                       'set']
+data_merged.columns = [
+    "acc_x",
+    "acc_y",
+    "acc_z",
+    "gyo_x",
+    "gyo_y",
+    "gyo_z",
+    "label",
+    "category",
+    "participant",
+    "set",
+]
 
 # --------------------------------------------------------------
 # Resample data (frequency conversion)
@@ -153,24 +161,26 @@ data_merged.columns = ['acc_x' , 'acc_y' , 'acc_z',
 # Gyroscope:        25.000Hz
 
 sampling = {
-    'acc_x' : 'mean',
-    'acc_y' : 'mean',
-    'acc_z' : 'mean',
-    'gyo_x' : 'mean',
-    'gyo_y' : 'mean',
-    'gyo_z' : 'mean',
-    'label': 'last', 
-    'category': 'last', 
-    'participant': 'last',
-    'set': 'last'
+    "acc_x": "mean",
+    "acc_y": "mean",
+    "acc_z": "mean",
+    "gyo_x": "mean",
+    "gyo_y": "mean",
+    "gyo_z": "mean",
+    "label": "last",
+    "category": "last",
+    "participant": "last",
+    "set": "last",
 }
-days = [g for n , g in data_merged.groupby(pd.Grouper(freq='D'))]
-data_resampled = pd.concat([df.resample(rule='200ms').apply(sampling).dropna() for df in days])
-data_resampled['set'] = data_resampled['set'].astype('int')
+days = [g for n, g in data_merged.groupby(pd.Grouper(freq="D"))]
+data_resampled = pd.concat(
+    [df.resample(rule="200ms").apply(sampling).dropna() for df in days]
+)
+data_resampled["set"] = data_resampled["set"].astype("int")
 data_resampled.info()
 # --------------------------------------------------------------
 # Export dataset
 # --------------------------------------------------------------
-data_resampled.to_pickle('../../data/interim/01_data_processed.pkl')
+data_resampled.to_pickle("../../data/interim/01_data_processed.pkl")
 
 # uncommitted
