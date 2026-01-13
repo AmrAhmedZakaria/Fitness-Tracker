@@ -147,9 +147,9 @@ data_merged.columns = [
     "gyo_x",
     "gyo_y",
     "gyo_z",
+    "participant",
     "label",
     "category",
-    "participant",
     "set",
 ]
 
@@ -167,9 +167,9 @@ sampling = {
     "gyo_x": "mean",
     "gyo_y": "mean",
     "gyo_z": "mean",
+    "participant": "last",
     "label": "last",
     "category": "last",
-    "participant": "last",
     "set": "last",
 }
 days = [g for n, g in data_merged.groupby(pd.Grouper(freq="D"))]
