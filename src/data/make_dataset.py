@@ -28,7 +28,7 @@ data_path = "../../data/raw/MetaMotion/"
 
 f = files[0]
 
-participant = f.split("-")[0].replace(data_path, "")
+participant = f.replace("\\", "/").split("/")[-1].split("-")[0]
 lable = f.split("-")[1]
 category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
@@ -48,7 +48,7 @@ acc_set = 1
 gyo_set = 1
 
 for f in files:
-    participant = f.split("-")[0].replace(data_path, "")
+    participant = f.replace("\\", "/").split("/")[-1].split("-")[0]
     lable = f.split("-")[1]
     category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
@@ -97,7 +97,7 @@ def read_data_from_files(files):
     gyo_set = 1
 
     for f in files:
-        participant = f.split("-")[0].replace(data_path, "")
+        participant = f.replace("\\", "/").split("/")[-1].split("-")[0]
         lable = f.split("-")[1]
         category = f.split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
